@@ -5,7 +5,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import Iterator
 
-from ..repository.abstract_repository import AbstractRepository
+from bookkeeper.repository.abstract_repository import AbstractRepository
 
 
 @dataclass
@@ -116,3 +116,13 @@ class Category:
             repo.add(cat)
             created[child] = cat
         return list(created.values())
+
+    def make_tree_from_repo(cls, repo: AbstractRepository['Category']) -> list[tuple[str, str | None]]:
+        """
+        можно сохранить репозиторий в виде дерева
+        """
+        all_cat = repo.get_all()
+        tree = []
+        for obj in all_cat:
+            tree.append((obj.name, obj.parent))
+        return tree

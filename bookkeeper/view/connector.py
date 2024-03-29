@@ -1,14 +1,29 @@
+"""
+модуль для взаимодействия sql таблицы расходов с интерфейсом
+"""
+import datetime
+
+from bookkeeper.repository.database import DatabaseConnection
+from bookkeeper.repository.memory_repository import MemoryRepository
+from bookkeeper.models.category import Category
+
+
 class Connector:
-    def __init__(self, db):
+    """
+    класс для взаимодействия sql таблицы расходов с интерфейсом
+    параметр db - датабаза из класса DatabaseConnection
+    max_id - id
+    """
+    def __init__(self, db: DatabaseConnection):
         self.db = db
         self.max_id = int(self.db.execute_query('SELECT MAX(exp_id) FROM Expenses')[0][0])
 
-    def changed_expense(self, row, column, exp_id, exp_data):
-        # if column == 0:
-        #     query = None
-        #     return 'нельзя менять id'
+    def changed_expense(self, column: int, exp_id: str, exp_data: str) -> None:
+        """
+        изменение расхода
+        """
         if column == 1:
-            data = float(exp_data)
+            data = exp_data
             query = '''UPDATE Expenses SET date = ? WHERE exp_id = ?'''
         elif column == 2:
             data = float(exp_data)
@@ -19,16 +34,28 @@ class Connector:
         elif column == 4:
             data = exp_data
             query = '''UPDATE Expenses SET comm = ? WHERE exp_id = ?'''
-        params = (data, int(exp_id))
-        print(params)
-        self.db.execute_query(query, params)
-        print(self.db.execute_query('SELECT * FROM Expenses'))
+        if column in [1, 2, 3, 4]:
+            params = (data, int(exp_id))
+            self.db.execute_query(query, params)
 
-    def add_expense(self, new_exp):
-        print(new_exp)
+    def add_expense(self, summa: str, cat: str, comm: str) -> None:
+        """
+        добавление нового расхода
+        """
         query = 'INSERT INTO Expenses(exp_id, date, sum, cat, comm) VALUES (?,?,?,?,?)'
         new_id = self.max_id + 1
-        self.max_id+=1
-        params = (new_id, int(new_exp[0]), float(new_exp[1]), new_exp[2], new_exp[3])
+        self.max_id += 1
+        date = datetime.date.today().strftime('%Y-%m-%d')
+        params = (new_id, date, float(summa), cat, comm)
         self.db.execute_query(query, params)
+
+    def send_categories_to_db(self):
+        cat_mem_repo = MemoryRepository[Category]()
+        cat_tree = [('Продукты', None), ('Электроника', None)]
+        Category.create_from_tree(tree=cat_tree, repo=cat_mem_repo)
+        Category.make_tree_from_repo(Category, cat_mem_repo)
+        query = 'INSERT INTO Categories(name, parent) VALUES (?,?)'
+        for val in cat_tree:
+            self.db.execute_query(query, params=val)
+
 

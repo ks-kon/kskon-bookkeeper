@@ -1,0 +1,32 @@
+QMainWindow {
+    background-color: #f0f0f0;
+}
+
+QLabel {
+    font-size: 16px;
+    color: #333;
+}
+
+QSpinBox {
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #555;
+    border-radius: 5px;
+}
+
+QSpinBox::up-button, QSpinBox::down-button {
+    width: 20px;
+    height: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #ddd;
+}
+
+QSpinBox::up-button:hover, QSpinBox::down-button:hover {
+    background-color: #ccc;
+}
+
+QSpinBox::up-button:pressed, QSpinBox::down-button:pressed {
+    background-color: #aaa;
+}
