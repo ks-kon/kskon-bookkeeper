@@ -1,4 +1,4 @@
-from bookkeeper.repository.memory_repository import MemoryRepository
+from bookkeeper.bookkeeper.repository.memory_repository import MemoryRepository
 
 import pytest
 

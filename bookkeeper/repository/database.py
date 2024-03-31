@@ -9,7 +9,7 @@ class DatabaseConnection:
     """
     взаимодействие с датабазой
     """
-    def __init__(self, db_name: str = 'bookkeeper.db'):
+    def __init__(self, db_name: str = 'bookkeeper/bookkeeper.db'):
         self.conn = sqlite3.connect(db_name)
         self.cursor = self.conn.cursor()
 
