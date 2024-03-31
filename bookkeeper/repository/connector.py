@@ -3,9 +3,9 @@
 """
 import datetime
 
-from bookkeeper.bookkeeper.repository.database import DatabaseConnection
-from bookkeeper.bookkeeper.repository.memory_repository import MemoryRepository
-from bookkeeper.bookkeeper.models.category import Category
+from .database import DatabaseConnection
+from .memory_repository import MemoryRepository
+from ..models.category import Category
 
 
 class Connector:

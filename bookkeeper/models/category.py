@@ -5,8 +5,8 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import Iterator
 
-from bookkeeper.bookkeeper.repository.abstract_repository import AbstractRepository
-
+from ..repository.abstract_repository import AbstractRepository
+# from ..models.budget import
 
 @dataclass
 class Category:

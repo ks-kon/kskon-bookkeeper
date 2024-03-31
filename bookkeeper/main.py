@@ -4,14 +4,19 @@ main
 import sys
 from PySide6.QtWidgets import QApplication
 
-from bookkeeper.bookkeeper.repository.database import DatabaseConnection
-from bookkeeper.bookkeeper.repository.memory_repository import MemoryRepository
+from bookkeeper.repository.database import DatabaseConnection
+from bookkeeper.repository.memory_repository import MemoryRepository
+from bookkeeper.repository.abstract_repository import AbstractRepository
 
-from bookkeeper.bookkeeper.view.view import MainWindow
-from bookkeeper.bookkeeper.repository.connector import Connector
 
-from bookkeeper.bookkeeper.models.category import Category
-from bookkeeper.bookkeeper.models.budget import Budget
+from bookkeeper.models.category import Category
+
+from bookkeeper.repository.connector import Connector
+
+from bookkeeper.models.budget import Budget
+
+from view.view import MainWindow
+
 
 
 if __name__ == '__main__':

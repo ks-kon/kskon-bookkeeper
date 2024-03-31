@@ -3,8 +3,8 @@ from datetime import datetime
 import pytest
 
 # from bookkeeper.bookkeeper.repository.memory_repository import MemoryRepository
-from bookkeeper.bookkeeper.repository.database import DatabaseConnection
-from bookkeeper.bookkeeper.models.budget import Budget
+from bookkeeper.repository.database import DatabaseConnection
+from bookkeeper.models.budget import Budget
 
 
 @pytest.fixture

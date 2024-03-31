@@ -3,7 +3,7 @@
 """
 import datetime
 
-from bookkeeper.bookkeeper.repository.database import DatabaseConnection
+from ..repository.database import DatabaseConnection
 
 
 class Budget:

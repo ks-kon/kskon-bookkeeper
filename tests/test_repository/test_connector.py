@@ -1,8 +1,8 @@
 import pytest
 from unittest.mock import Mock, patch
 
-from bookkeeper.bookkeeper.repository.connector import Connector
-from bookkeeper.bookkeeper.repository.database import DatabaseConnection
+from bookkeeper.repository.connector import Connector
+from bookkeeper.repository.database import DatabaseConnection
 
 
 @pytest.fixture

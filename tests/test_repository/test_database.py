@@ -1,4 +1,4 @@
-from bookkeeper.bookkeeper.repository.database import DatabaseConnection
+from bookkeeper.repository.database import DatabaseConnection
 
 import pytest
 

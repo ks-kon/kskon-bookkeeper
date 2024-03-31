@@ -7,11 +7,11 @@ from PySide6.QtWidgets import (QWidget, QLabel, QVBoxLayout,
                                QLineEdit, QComboBox, QHBoxLayout, QGroupBox)
 from PySide6 import QtWidgets
 
-from bookkeeper.bookkeeper.repository.database import DatabaseConnection
-from bookkeeper.bookkeeper.repository.memory_repository import MemoryRepository
-from bookkeeper.bookkeeper.repository.connector import Connector
-from bookkeeper.bookkeeper.models.budget import Budget
-from bookkeeper.bookkeeper.models.category import Category
+from bookkeeper.repository.database import DatabaseConnection
+from bookkeeper.repository.memory_repository import MemoryRepository
+from bookkeeper.repository.connector import Connector
+from bookkeeper.models.budget import Budget
+from bookkeeper.models.category import Category
 
 
 class MainWindow(QWidget):
