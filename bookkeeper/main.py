@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QApplication
 
 from bookkeeper.repository.database import DatabaseConnection
 from bookkeeper.repository.memory_repository import MemoryRepository
-from bookkeeper.repository.abstract_repository import AbstractRepository
+# from bookkeeper.repository.abstract_repository import AbstractRepository
 
 
 from bookkeeper.models.category import Category
@@ -15,19 +15,17 @@ from bookkeeper.repository.connector import Connector
 
 from bookkeeper.models.budget import Budget
 
-from view.view import MainWindow
+from bookkeeper.view.view import MainWindow
 
 
 
 if __name__ == '__main__':
     db = DatabaseConnection()
-    conn = Connector(db)
-    budg = Budget(db, 1000, 5000, 100000)
     cat_mem_repo = MemoryRepository[Category]()
-    cat_tree = [('Продукты', None), ('Электроника', None)]
+    cat_tree = db.execute_query('SELECT * FROM Categories')
     Category.create_from_tree(tree=cat_tree, repo=cat_mem_repo)
-    print(Category.make_tree_from_repo(Category, repo=cat_mem_repo))
-    conn.send_categories_to_db()
+    conn = Connector(db, cat_mem_repo)
+    budg = Budget(db, 1000, 5000, 100000)
 
     app = QApplication(sys.argv)
     main_window = MainWindow(db, conn, budg, cat_mem_repo)

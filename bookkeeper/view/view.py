@@ -80,8 +80,8 @@ class MainWindow(QWidget):
         self.h_layout = QHBoxLayout(self)
         self.line_label = QLabel('Добавить новый расход: сумма, категория, комментарий')
         self.layout.addWidget(self.line_label)
-        self.lineedit = QLineEdit()
-        self.layout.addWidget(self.lineedit)
+        # self.lineedit = QLineEdit()
+        # self.layout.addWidget(self.lineedit)
 
         self._horizontal_group_box = QGroupBox()
         self.h_layout = QHBoxLayout()
@@ -100,21 +100,22 @@ class MainWindow(QWidget):
         self.layout.addWidget(self.exp_button)
 
         # для просмотра и редактирования списка категорий
-        self.cat_label = QLabel('Добавить категорию')
+        self.cat_label = QLabel('Добавить категорию:'
+                                ' выберите родителя, и введите название новой категории')
         self.layout.addWidget(self.cat_label)
-
-        # self.combobox = QComboBox()
-        self.select_parent_label = QLabel('Выберите родителя')
+        self._horizontal_group_box2 = QGroupBox()
+        self.h2_layout = QHBoxLayout()
         self.parent_combobox = QComboBox()
         self.parent_combobox.addItems(['Нет родителя'])
         self.parent_combobox.addItems(
             [cat.name+', '+str(cat.pk) for cat in repo.get_all()])
-        self.new_cat_name_lineedit = QLineEdit('Введите название новой категории')
+        self.new_cat_name_lineedit = QLineEdit()
         self.cat_add_button = QPushButton('Добавить новую категорию')
         self.cat_add_button.clicked.connect(self.on_cat_add_button_clicked)
-
-        self.layout.addWidget(self.parent_combobox)
-        self.layout.addWidget(self.new_cat_name_lineedit)
+        self.h2_layout.addWidget(self.parent_combobox)
+        self.h2_layout.addWidget(self.new_cat_name_lineedit)
+        self._horizontal_group_box2.setLayout(self.h2_layout)
+        self.layout.addWidget(self._horizontal_group_box2)
         self.layout.addWidget(self.cat_add_button)
 
         # Устанавливаем макет для главного окна
@@ -149,7 +150,7 @@ class MainWindow(QWidget):
         """
         changed_expense_id = self.expenses_table.item(row, 0).text()
         changed_data = self.expenses_table.item(row, column).text()
-        self.connector.changed_expense(row, column, changed_expense_id, changed_data)
+        self.connector.changed_expense(column, changed_expense_id, changed_data)
 
     def budg_on_cell_changed(self, row: int, column: int) -> None:
         """
@@ -162,8 +163,8 @@ class MainWindow(QWidget):
         """
         отсылает новый расход в Connector
         """
-        self.connector.add_expense(self.sum_edit.text(),
-                                   self.cat_edit.currentText(), self.comm_edit.text())
+        self.connector.add_expense(summa=self.sum_edit.text(),
+                                   cat=self.cat_edit.currentText(), comm=self.comm_edit.text())
         self.exp_set_data(self.db.execute_query('SELECT * FROM Expenses'))
 
     def on_cat_add_button_clicked(self) -> None:
@@ -176,4 +177,7 @@ class MainWindow(QWidget):
         else:
             new_cat_parent_id = int(self.parent_combobox.currentText().split(', ')[1])
             new_cat = Category(name=new_cat_name, parent=new_cat_parent_id)
-        self.repo.add(new_cat)
+        new_cat_id = self.repo.add(new_cat)
+        self.cat_edit.addItems([self.repo.get(new_cat_id).name])
+        self.parent_combobox.addItems([self.repo.get(new_cat_id).name+', '+str(new_cat_id)])
+        self.connector.send_categories_to_db()

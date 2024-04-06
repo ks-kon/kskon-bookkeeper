@@ -14,9 +14,10 @@ class Connector:
     параметр db - датабаза из класса DatabaseConnection
     max_id - id
     """
-    def __init__(self, db: DatabaseConnection):
+    def __init__(self, db: DatabaseConnection, mem_repo: MemoryRepository):
         self.db = db
         self.max_id = int(self.db.execute_query('SELECT MAX(exp_id) FROM Expenses')[0][0])
+        self.mem_repo = mem_repo
 
     def changed_expense(self, column: int, exp_id: str, exp_data: str) -> None:
         """
@@ -50,12 +51,9 @@ class Connector:
         self.db.execute_query(query, params)
 
     def send_categories_to_db(self):
-        cat_mem_repo = MemoryRepository[Category]()
-        cat_tree = [('Продукты', None), ('Электроника', None)]
-        Category.create_from_tree(tree=cat_tree, repo=cat_mem_repo)
-        Category.make_tree_from_repo(Category, cat_mem_repo)
+        cat_tree = Category.make_tree_from_repo(Category, self.mem_repo)
+        query0 = 'DELETE FROM Categories'
+        self.db.execute_query(query0)
         query = 'INSERT INTO Categories(name, parent) VALUES (?,?)'
         for val in cat_tree:
             self.db.execute_query(query, params=val)
-
-
